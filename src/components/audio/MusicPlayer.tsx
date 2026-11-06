@@ -180,3 +180,4 @@ export default function MusicPlayer({ initialTitle = 'Enchanted Fairytale Ambian
     </>
   );
 }
+

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Letter } from '@/types';
 import LetterModal from './LetterModal';
-import { Mail, Heart, Sparkles } from 'lucide-react';
+import { Mail, Heart, Sparkles, Feather } from 'lucide-react';
 import { sound } from '@/lib/sound';
 
 interface LettersSectionProps {
@@ -57,40 +57,48 @@ export default function LettersSection({ letters }: LettersSectionProps) {
   };
 
   return (
-    <section id="letters" className="relative py-20 px-4 max-w-6xl mx-auto z-20">
+    <section id="letters" className="relative py-16 sm:py-24 px-4 max-w-6xl mx-auto z-20">
       {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-950/80 border border-rose-500/30 text-rose-300 text-xs md:text-sm">
+      <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3 sm:space-y-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-950/80 border border-rose-500/30 text-rose-300 text-xs sm:text-sm shadow-md">
           <Mail className="w-4 h-4 text-rose-400" />
           <span>Letters From Ayush</span>
         </div>
 
-        <h2 className="text-3xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-amber-100 to-purple-200">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-amber-100 to-purple-200">
           Meri Princess Ke Naam 15 Khat
         </h2>
 
-        <p className="text-sm md:text-base text-purple-200/80 font-sans">
+        <p className="text-xs sm:text-sm md:text-base text-purple-200/80 font-sans max-w-xl mx-auto">
           Har ek khat mein Ayush ke dil ki sachchi aawaz hai. Click any envelope to unseal and read the letter.
         </p>
       </div>
 
       {/* Grid of 15 Envelopes */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
         {letters.map((letter, idx) => {
           const theme = getThemeClasses(letter.envelopeTheme);
 
           return (
             <div
               key={letter.id}
+              role="button"
+              tabIndex={0}
               onClick={() => handleOpenLetter(idx)}
-              className={`group relative p-6 rounded-2xl bg-gradient-to-b ${theme.cardBg} border ${theme.border} shadow-lg backdrop-blur-md cursor-pointer transition-all duration-300 hover:-translate-y-2 ${theme.glow}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleOpenLetter(idx);
+                }
+              }}
+              className={`group relative p-5 sm:p-6 rounded-2xl bg-gradient-to-b ${theme.cardBg} border ${theme.border} shadow-lg backdrop-blur-md cursor-pointer transition-all duration-300 hover:-translate-y-1.5 active:scale-[0.98] ${theme.glow}`}
             >
               {/* Envelope Flap visual */}
               <div className="absolute top-0 inset-x-0 h-10 bg-white/5 rounded-t-2xl border-b border-white/10 pointer-events-none" />
 
               {/* Wax Seal Badge */}
-              <div className="flex items-center justify-between mb-6">
-                <span className={`text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full border border-white/10 ${theme.badge}`}>
+              <div className="flex items-center justify-between mb-5 sm:mb-6">
+                <span className={`text-[10px] sm:text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full border border-white/10 ${theme.badge}`}>
                   Letter #{letter.orderIndex}
                 </span>
 
@@ -100,7 +108,7 @@ export default function LettersSection({ letters }: LettersSectionProps) {
               </div>
 
               {/* Title & Subtitle */}
-              <h3 className="text-lg font-serif font-bold text-white group-hover:text-rose-200 transition-colors line-clamp-1 mb-1">
+              <h3 className="text-base sm:text-lg font-serif font-bold text-white group-hover:text-rose-200 transition-colors line-clamp-1 mb-1">
                 {letter.title}
               </h3>
 
@@ -121,10 +129,11 @@ export default function LettersSection({ letters }: LettersSectionProps) {
         })}
       </div>
 
-      {/* Modal Dialog */}
+      {/* Modal Dialog with React Portal */}
       {selectedLetterIndex !== null && (
         <LetterModal
           letter={letters[selectedLetterIndex]}
+          totalLetters={letters.length}
           onClose={() => setSelectedLetterIndex(null)}
           onPrev={() => setSelectedLetterIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : prev))}
           onNext={() => setSelectedLetterIndex((prev) => (prev !== null && prev < letters.length - 1 ? prev + 1 : prev))}

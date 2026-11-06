@@ -20,8 +20,16 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id, title, caption, category, featured, date, orderIndex } = await req.json();
+    const body = await req.json();
     const db = getDatabase();
+
+    // If batch photos array is provided (e.g. for reordering)
+    if (body.photos && Array.isArray(body.photos)) {
+      saveDatabase({ photos: body.photos });
+      return NextResponse.json({ success: true, photos: body.photos });
+    }
+
+    const { id, title, caption, category, featured, isPublished, date, orderIndex } = body;
 
     const updated = db.photos.map((p) => {
       if (p.id === id) {
@@ -30,7 +38,8 @@ export async function PUT(req: NextRequest) {
           title: title ?? p.title,
           caption: caption ?? p.caption,
           category: category ?? p.category,
-          featured: featured ?? p.featured,
+          featured: featured !== undefined ? featured : p.featured,
+          isPublished: isPublished !== undefined ? isPublished : p.isPublished,
           date: date ?? p.date,
           orderIndex: orderIndex ?? p.orderIndex,
         };
@@ -76,3 +85,4 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to delete photo' }, { status: 500 });
   }
 }
+

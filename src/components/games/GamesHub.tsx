@@ -50,30 +50,30 @@ export default function GamesHub({ quizQuestions }: GamesHubProps) {
   ];
 
   return (
-    <section id="games" className="relative py-20 px-4 max-w-6xl mx-auto z-20">
+    <section id="games" className="relative py-16 sm:py-24 px-4 max-w-6xl mx-auto z-20">
       {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/30 text-rose-300 text-xs md:text-sm">
+      <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 space-y-3 sm:space-y-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/30 text-rose-300 text-xs sm:text-sm">
           <Gamepad2 className="w-4 h-4 text-rose-400" />
           <span>Romantic Games & Quizzes</span>
         </div>
 
-        <h2 className="text-3xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-amber-100 to-purple-200">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-amber-100 to-purple-200">
           5 Khel Sirf Hamare Pyaar Ke
         </h2>
 
-        <p className="text-sm md:text-base text-purple-200/80 font-sans">
+        <p className="text-xs sm:text-sm md:text-base text-purple-200/80 font-sans max-w-xl mx-auto">
           Har ek game mein Ayush aur Shree ki real college story, 8 ghante classroom, 6 ghante calls aur hostel memories chhupe hain.
         </p>
       </div>
 
       {/* Game Selector Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mb-10 max-w-4xl mx-auto">
+      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3 mb-8 sm:mb-10 max-w-4xl mx-auto">
         {games.map((g) => (
           <button
             key={g.id}
             onClick={() => setActiveTab(g.id as typeof activeTab)}
-            className={`px-4 py-2.5 rounded-2xl flex items-center gap-2 text-xs md:text-sm font-medium transition-all duration-300 cursor-pointer ${
+            className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer ${
               activeTab === g.id
                 ? 'bg-gradient-to-r from-rose-600 to-purple-600 text-white shadow-[0_0_25px_rgba(255,77,136,0.5)] scale-105 border border-rose-400/50'
                 : 'bg-black/40 hover:bg-purple-950/50 text-purple-200 border border-purple-500/30'
@@ -96,3 +96,4 @@ export default function GamesHub({ quizQuestions }: GamesHubProps) {
     </section>
   );
 }
+

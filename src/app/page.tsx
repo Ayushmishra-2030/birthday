@@ -103,9 +103,9 @@ export default function Home() {
 
       {/* Admin / Preview Status Bar Banner */}
       {(content.isPreview || content.isAdmin) && (
-        <div className="sticky top-0 z-50 bg-gradient-to-r from-purple-950/95 via-rose-950/95 to-purple-950/95 border-b border-rose-500/40 backdrop-blur-md px-4 py-2 flex items-center justify-between text-xs text-rose-200 shadow-lg">
+        <div className="relative z-50 bg-gradient-to-r from-purple-950/95 via-rose-950/95 to-purple-950/95 border-b border-rose-500/40 px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs text-rose-200 shadow-lg">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
             <span className="font-semibold text-white">
               {content.isAdmin ? '👑 Admin Mode (Ayush)' : '✨ Secret Preview Mode Active'}
             </span>
@@ -236,3 +236,4 @@ export default function Home() {
     </main>
   );
 }
+

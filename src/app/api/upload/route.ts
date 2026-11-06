@@ -70,6 +70,7 @@ export async function POST(req: NextRequest) {
         date,
         category,
         featured,
+        isPublished: true,
         orderIndex: (db.photos.length || 0) + 1,
         createdAt: new Date().toISOString(),
       };
@@ -93,3 +94,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

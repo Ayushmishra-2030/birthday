@@ -159,18 +159,41 @@ export async function uploadScrapbookImage(
   fileName: string,
   contentType: string
 ): Promise<string> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const bucket = process.env.SUPABASE_BUCKET || 'birthday-scrapbook';
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)?.trim();
+  const bucket = process.env.SUPABASE_BUCKET || 'birthday-photos';
 
-  const ext = path.extname(fileName) || '.jpg';
+  const ext = path.extname(fileName).toLowerCase() || '.jpg';
   const cleanBase = path.basename(fileName, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
   const uniqueName = `${Date.now()}_${cleanBase}${ext}`;
 
   // If Supabase is configured, upload to Supabase Storage Bucket
   if (supabaseUrl && supabaseKey) {
     try {
-      const uploadEndpoint = `${supabaseUrl.replace(/\/+$/, '')}/storage/v1/object/${bucket}/${uniqueName}`;
+      const baseUrl = supabaseUrl.replace(/\/+$/, '');
+      
+      // Auto-ensure bucket exists
+      try {
+        await fetch(`${baseUrl}/storage/v1/bucket`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${supabaseKey}`,
+            apikey: supabaseKey,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: bucket,
+            name: bucket,
+            public: true,
+            file_size_limit: 26214400, // 25MB
+            allowed_mime_types: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+          }),
+        });
+      } catch (e) {
+        // Bucket may already exist
+      }
+
+      const uploadEndpoint = `${baseUrl}/storage/v1/object/${bucket}/${uniqueName}`;
       const response = await fetch(uploadEndpoint, {
         method: 'POST',
         headers: {
@@ -183,11 +206,11 @@ export async function uploadScrapbookImage(
       });
 
       if (response.ok) {
-        // Return public URL
-        const publicUrl = `${supabaseUrl.replace(/\/+$/, '')}/storage/v1/object/public/${bucket}/${uniqueName}`;
+        // Return permanent public URL
+        const publicUrl = `${baseUrl}/storage/v1/object/public/${bucket}/${uniqueName}`;
         return publicUrl;
       }
-      console.warn('Supabase upload failed, falling back to local public upload', await response.text());
+      console.warn('Supabase upload failed, falling back to local persistent upload', await response.text());
     } catch (err) {
       console.warn('Error uploading to Supabase, falling back to local file storage', err);
     }
@@ -202,6 +225,6 @@ export async function uploadScrapbookImage(
   const filePath = path.join(uploadsDir, uniqueName);
   fs.writeFileSync(filePath, buffer);
 
-  // Return public relative URL that works anywhere
+  // Return public relative URL that works everywhere
   return `/uploads/${uniqueName}`;
 }

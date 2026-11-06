@@ -19,3 +19,4 @@ export async function POST(req: NextRequest) {
   response.cookies.delete('admin_auth_token');
   return response;
 }
+

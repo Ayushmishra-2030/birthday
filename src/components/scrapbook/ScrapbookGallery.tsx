@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Photo } from '@/types';
 import PhotoLightbox from './PhotoLightbox';
-import { Image as ImageIcon, Sparkles, Heart, LayoutGrid, Layers, Filter } from 'lucide-react';
+import { Image as ImageIcon, Sparkles, LayoutGrid, Layers, Filter } from 'lucide-react';
 import { sound } from '@/lib/sound';
 
 interface ScrapbookGalleryProps {
@@ -16,43 +16,46 @@ export default function ScrapbookGallery({ photos }: ScrapbookGalleryProps) {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [layoutMode, setLayoutMode] = useState<'polaroid' | 'grid'>('polaroid');
 
+  // Filter only published photos for public display
+  const publishedPhotos = photos.filter((p) => p.isPublished !== false);
+
   // Categories
-  const categories = ['All', ...Array.from(new Set(photos.map((p) => p.category || 'Memories')))];
+  const categories = ['All', ...Array.from(new Set(publishedPhotos.map((p) => p.category || 'Memories')))];
 
   const filteredPhotos = activeCategory === 'All'
-    ? photos
-    : photos.filter((p) => (p.category || 'Memories') === activeCategory);
+    ? publishedPhotos
+    : publishedPhotos.filter((p) => (p.category || 'Memories') === activeCategory);
 
   const handleOpenPhoto = (index: number) => {
     sound.playChime(750, 0.4);
     setSelectedPhotoIndex(index);
   };
 
-  // Tilts for playful polaroid scrapbook look
-  const tilts = ['-rotate-2', 'rotate-2', '-rotate-3', 'rotate-1', 'rotate-3', '-rotate-1'];
+  // Safe subtle tilts that never overflow mobile viewports
+  const tilts = ['sm:-rotate-2 rotate-0', 'sm:rotate-2 rotate-0', 'sm:-rotate-1 rotate-0', 'sm:rotate-1 rotate-0'];
 
   return (
-    <section id="scrapbook" className="relative py-20 px-4 max-w-6xl mx-auto z-20">
+    <section id="scrapbook" className="relative py-16 sm:py-24 px-4 max-w-6xl mx-auto z-20 overflow-x-clip">
       {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/30 text-rose-300 text-xs md:text-sm">
+      <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 space-y-3 sm:space-y-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/30 text-rose-300 text-xs sm:text-sm shadow-md">
           <ImageIcon className="w-4 h-4 text-rose-400" />
           <span>Our Private Scrapbook</span>
         </div>
 
-        <h2 className="text-3xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-amber-100 to-purple-200">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-amber-100 to-purple-200">
           Yaadein Jo Hamesha Zinda Rahengi
         </h2>
 
-        <p className="text-sm md:text-base text-purple-200/80 font-sans">
+        <p className="text-xs sm:text-sm md:text-base text-purple-200/80 font-sans max-w-xl mx-auto">
           Har tasveer mein ek chhota sa pal qaid hai jo Ayush aur Shree ke dil ke behad kareeb hai.
         </p>
       </div>
 
       {/* Filter Tabs and Layout Switcher */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 pb-4 border-b border-purple-500/20">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 sm:mb-10 pb-4 border-b border-purple-500/20">
         {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2">
           <span className="text-xs text-purple-300/60 flex items-center gap-1 mr-1">
             <Filter className="w-3 h-3" /> Filter:
           </span>
@@ -72,45 +75,57 @@ export default function ScrapbookGallery({ photos }: ScrapbookGalleryProps) {
         </div>
 
         {/* Layout Mode Switcher */}
-        <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-purple-500/30">
+        <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-purple-500/30 shrink-0">
           <button
             onClick={() => setLayoutMode('polaroid')}
-            className={`p-1.5 rounded-lg text-xs flex items-center gap-1 transition-all cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
               layoutMode === 'polaroid' ? 'bg-rose-600 text-white' : 'text-purple-300 hover:text-white'
             }`}
             title="Polaroid Scrapbook Layout"
           >
             <Layers className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">Scrapbook</span>
+            <span>Scrapbook</span>
           </button>
           <button
             onClick={() => setLayoutMode('grid')}
-            className={`p-1.5 rounded-lg text-xs flex items-center gap-1 transition-all cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
               layoutMode === 'grid' ? 'bg-rose-600 text-white' : 'text-purple-300 hover:text-white'
             }`}
             title="Cinematic Grid Layout"
           >
             <LayoutGrid className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">Grid</span>
+            <span>Grid</span>
           </button>
         </div>
       </div>
 
       {/* Scrapbook Content */}
-      {layoutMode === 'polaroid' ? (
+      {filteredPhotos.length === 0 ? (
+        <div className="text-center py-12 text-purple-300/60 text-sm">
+          No photos found in this category.
+        </div>
+      ) : layoutMode === 'polaroid' ? (
         /* Polaroid Scrapbook Layout */
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
           {filteredPhotos.map((photo, index) => {
             const tilt = tilts[index % tilts.length];
 
             return (
               <div
                 key={photo.id}
+                role="button"
+                tabIndex={0}
                 onClick={() => handleOpenPhoto(index)}
-                className={`group relative p-4 pb-6 bg-[#fbf9f5] rounded-xl shadow-[0_15px_35px_rgba(0,0,0,0.6)] cursor-pointer transition-all duration-300 hover:scale-105 hover:z-20 hover:rotate-0 ${tilt}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleOpenPhoto(index);
+                  }
+                }}
+                className={`group relative p-3.5 sm:p-4 pb-5 sm:pb-6 bg-[#fbf9f5] rounded-xl shadow-[0_15px_35px_rgba(0,0,0,0.6)] cursor-pointer transition-all duration-300 hover:scale-[1.03] hover:z-20 hover:rotate-0 active:scale-95 ${tilt}`}
               >
                 {/* Vintage Tape Decoration at top */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-amber-200/50 backdrop-blur-sm border border-amber-300/40 rotate-1 shadow-sm rounded-sm" />
+                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-20 sm:w-24 h-5 sm:h-6 bg-amber-200/60 backdrop-blur-sm border border-amber-300/50 rotate-1 shadow-sm rounded-sm" />
 
                 {/* Photo Container */}
                 <div className="relative w-full aspect-[4/3] bg-neutral-900 rounded-lg overflow-hidden mb-3">
@@ -119,7 +134,7 @@ export default function ScrapbookGallery({ photos }: ScrapbookGalleryProps) {
                     alt={photo.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
                     <span className="text-white text-xs font-medium flex items-center gap-1">
@@ -131,7 +146,7 @@ export default function ScrapbookGallery({ photos }: ScrapbookGalleryProps) {
 
                 {/* Polaroid Handwritten Caption */}
                 <div className="space-y-1 px-1">
-                  <h4 className="font-serif font-bold text-gray-900 text-base line-clamp-1">
+                  <h4 className="font-serif font-bold text-gray-900 text-sm sm:text-base line-clamp-1">
                     {photo.title}
                   </h4>
                   <p className="font-sans text-xs text-gray-600 line-clamp-2 italic">
@@ -149,25 +164,33 @@ export default function ScrapbookGallery({ photos }: ScrapbookGalleryProps) {
         </div>
       ) : (
         /* Cinematic Grid Layout */
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6">
           {filteredPhotos.map((photo, index) => (
             <div
               key={photo.id}
+              role="button"
+              tabIndex={0}
               onClick={() => handleOpenPhoto(index)}
-              className="group relative aspect-square rounded-2xl overflow-hidden bg-black/40 border border-purple-500/30 cursor-pointer shadow-lg hover:border-rose-500/60 transition-all duration-300 hover:scale-[1.02]"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleOpenPhoto(index);
+                }
+              }}
+              className="group relative aspect-square rounded-2xl overflow-hidden bg-black/40 border border-purple-500/30 cursor-pointer shadow-lg hover:border-rose-500/60 transition-all duration-300 hover:scale-[1.02] active:scale-95"
             >
               <Image
                 src={photo.imageUrl}
                 alt={photo.title}
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-700"
-                sizes="(max-width: 768px) 100vw, 33vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#12071d] via-[#12071d]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-6 flex flex-col justify-end">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#12071d] via-[#12071d]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-5 sm:p-6 flex flex-col justify-end">
                 <span className="text-xs text-amber-300 font-semibold mb-1">
                   {photo.category}
                 </span>
-                <h4 className="text-lg font-serif font-bold text-white mb-1">
+                <h4 className="text-base sm:text-lg font-serif font-bold text-white mb-1">
                   {photo.title}
                 </h4>
                 <p className="text-xs text-rose-200/80 font-sans line-clamp-2">

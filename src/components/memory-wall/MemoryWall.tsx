@@ -21,25 +21,25 @@ export default function MemoryWall({ quotes }: MemoryWallProps) {
   };
 
   return (
-    <section id="memory-wall" className="relative py-20 px-4 max-w-6xl mx-auto z-20">
+    <section id="memory-wall" className="relative py-16 sm:py-24 px-4 max-w-6xl mx-auto z-20 overflow-x-clip">
       {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/30 text-rose-300 text-xs md:text-sm">
+      <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 space-y-3 sm:space-y-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/30 text-rose-300 text-xs sm:text-sm shadow-md">
           <MessageSquareHeart className="w-4 h-4 text-rose-400" />
           <span>Little Things, Infinite Memories</span>
         </div>
 
-        <h2 className="text-3xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-amber-100 to-purple-200">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-amber-100 to-purple-200">
           Hamari Chhoti Chhoti Baatein
         </h2>
 
-        <p className="text-sm md:text-base text-purple-200/80 font-sans">
+        <p className="text-xs sm:text-sm md:text-base text-purple-200/80 font-sans max-w-xl mx-auto">
           Classroom ke kone se lekar hostel ki calls tak, wo lamhe jo hamare dilon par hamesha ke liye chhap gaye.
         </p>
       </div>
 
       {/* Masonry / Grid Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {quotes.map((q, idx) => {
           const count = likesState[q.id] !== undefined ? likesState[q.id] : q.heartsCount;
 
@@ -82,3 +82,4 @@ export default function MemoryWall({ quotes }: MemoryWallProps) {
     </section>
   );
 }
+

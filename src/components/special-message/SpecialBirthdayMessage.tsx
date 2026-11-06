@@ -53,25 +53,25 @@ Ayush`;
   }, [started, fullLetter]);
 
   return (
-    <section id="special-letter" className="relative py-24 px-4 max-w-4xl mx-auto z-20">
+    <section id="special-letter" className="relative py-16 sm:py-24 px-4 max-w-4xl mx-auto z-20 overflow-x-clip">
       {/* Header */}
-      <div className="text-center mb-12 space-y-3">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-950/80 border border-rose-500/40 text-amber-300 text-xs md:text-sm font-semibold tracking-wider uppercase shadow-lg">
+      <div className="text-center mb-8 sm:mb-12 space-y-2 sm:space-y-3">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-950/80 border border-rose-500/40 text-amber-300 text-xs sm:text-sm font-semibold tracking-wider uppercase shadow-lg">
           <Feather className="w-4 h-4 text-rose-400" />
           <span>A Deep Heartfelt Birthday Epistle</span>
         </div>
 
-        <h2 className="text-3xl md:text-5xl font-serif font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-amber-100 to-purple-200 drop-shadow">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-amber-100 to-purple-200 drop-shadow">
           One More Thing, My Princess...
         </h2>
 
-        <p className="text-sm md:text-base text-rose-200/80 font-sans italic">
+        <p className="text-xs sm:text-sm md:text-base text-rose-200/80 font-sans italic max-w-xl mx-auto">
           Ayush ke dil ki sabse gehri aawaz, khaas Shree ke 7 November birthday ke liye.
         </p>
       </div>
 
       {/* Ornate Parchment Letter */}
-      <div className="relative p-7 md:p-12 rounded-3xl bg-gradient-to-b from-[#1e0e2e]/95 via-[#13071f]/95 to-[#0b0412]/95 border-2 border-rose-500/40 shadow-[0_0_80px_rgba(255,77,136,0.35)] backdrop-blur-xl">
+      <div className="relative p-5 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#1e0e2e]/95 via-[#13071f]/95 to-[#0b0412]/95 border-2 border-rose-500/40 shadow-[0_0_80px_rgba(255,77,136,0.35)] backdrop-blur-xl">
         {/* Glow corners */}
         <div className="absolute top-0 right-0 w-44 h-44 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-44 h-44 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -93,3 +93,4 @@ Ayush`;
     </section>
   );
 }
+

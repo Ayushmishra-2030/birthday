@@ -211,25 +211,25 @@ export default function GrandBirthdayReveal({ onEnterWorld }: GrandBirthdayRevea
               <Star className="w-4 h-4 fill-amber-300 text-amber-300" />
             </div>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-300 via-amber-200 to-purple-200 drop-shadow-[0_0_35px_rgba(255,77,136,0.8)]">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-serif font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-300 via-amber-200 to-purple-200 drop-shadow-[0_0_35px_rgba(255,77,136,0.8)] px-2 leading-tight">
               HAPPY BIRTHDAY, MY PRINCESS SHREE!
             </h1>
 
-            <p className="text-lg md:text-2xl font-serif text-rose-200/95 italic">
+            <p className="text-base sm:text-xl md:text-2xl font-serif text-rose-200/95 italic px-2">
               From Ayush, with all the love in my little universe. ❤️
             </p>
           </div>
 
           {/* Interactive Birthday Cake */}
-          <div className="relative my-4 flex flex-col items-center">
+          <div className="relative my-4 flex flex-col items-center w-full max-w-[320px] sm:max-w-[380px] mx-auto">
             {/* Candle Flames */}
-            <div className="flex items-center gap-6 mb-1 z-10">
+            <div className="flex items-center gap-5 sm:gap-6 mb-1 z-10">
               {[1, 2, 3].map((candleIndex) => (
                 <div key={candleIndex} className="flex flex-col items-center">
                   {!isCandleBlown ? (
                     <div className="relative">
-                      <div className="w-4 h-6 bg-gradient-to-t from-orange-500 via-amber-400 to-yellow-100 rounded-full animate-bounce drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]" />
-                      <Flame className="w-5 h-7 text-amber-300 absolute -top-1 -left-0.5 animate-pulse" />
+                      <div className="w-3.5 sm:w-4 h-5 sm:h-6 bg-gradient-to-t from-orange-500 via-amber-400 to-yellow-100 rounded-full animate-bounce drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]" />
+                      <Flame className="w-4 sm:w-5 h-6 sm:h-7 text-amber-300 absolute -top-1 -left-0.5 animate-pulse" />
                     </div>
                   ) : (
                     <div className="w-3 h-4 bg-gray-500/40 rounded-full animate-pulse">
@@ -237,25 +237,25 @@ export default function GrandBirthdayReveal({ onEnterWorld }: GrandBirthdayRevea
                     </div>
                   )}
                   {/* Candle Wick & Body */}
-                  <div className="w-1.5 h-6 bg-gradient-to-b from-rose-300 to-purple-400 rounded-sm shadow-sm" />
+                  <div className="w-1.5 h-5 sm:h-6 bg-gradient-to-b from-rose-300 to-purple-400 rounded-sm shadow-sm" />
                 </div>
               ))}
             </div>
 
             {/* Cake Tiers */}
-            <div className="relative">
+            <div className="relative w-full flex flex-col items-center">
               {/* Top Tier */}
-              <div className="w-36 md:w-48 h-12 md:h-14 rounded-t-2xl bg-gradient-to-r from-rose-500 via-pink-400 to-rose-600 border border-rose-300/40 shadow-inner flex items-center justify-center text-xs md:text-sm font-serif font-bold text-white tracking-widest">
+              <div className="w-32 sm:w-44 md:w-48 h-10 sm:h-12 md:h-14 rounded-t-2xl bg-gradient-to-r from-rose-500 via-pink-400 to-rose-600 border border-rose-300/40 shadow-inner flex items-center justify-center text-xs md:text-sm font-serif font-bold text-white tracking-widest">
                 SHREE
               </div>
               {/* Frosting drips */}
-              <div className="w-36 md:w-48 h-2 bg-white/70 rounded-full mx-auto" />
+              <div className="w-32 sm:w-44 md:w-48 h-1.5 sm:h-2 bg-white/70 rounded-full mx-auto" />
               {/* Bottom Tier */}
-              <div className="w-48 md:w-64 h-16 md:h-20 rounded-b-2xl bg-gradient-to-r from-purple-800 via-rose-800 to-purple-900 border-x border-b border-purple-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] flex items-center justify-center text-xs md:text-sm font-sans text-rose-200">
+              <div className="w-44 sm:w-60 md:w-64 h-14 sm:h-18 md:h-20 rounded-b-2xl bg-gradient-to-r from-purple-800 via-rose-800 to-purple-900 border-x border-b border-purple-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] flex items-center justify-center text-[11px] sm:text-xs md:text-sm font-sans text-rose-200 px-2 text-center">
                 ✨ Princess of Ayush&apos;s Heart ✨
               </div>
               {/* Cake Stand */}
-              <div className="w-56 md:w-72 h-3 bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 rounded-full mx-auto mt-0.5 shadow-md" />
+              <div className="w-52 sm:w-68 md:w-72 h-3 bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 rounded-full mx-auto mt-0.5 shadow-md" />
             </div>
           </div>
 
@@ -323,3 +323,4 @@ export default function GrandBirthdayReveal({ onEnterWorld }: GrandBirthdayRevea
     </div>
   );
 }
+

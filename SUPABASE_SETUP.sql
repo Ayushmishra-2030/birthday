@@ -5,28 +5,28 @@
 
 -- 1. Create Storage Bucket for Public Photographs
 INSERT INTO storage.buckets (id, name, public)
-VALUES ('birthday-scrapbook', 'birthday-scrapbook', true)
+VALUES ('birthday-photos', 'birthday-photos', true)
 ON CONFLICT (id) DO UPDATE SET public = true;
 
 -- Storage Policy: Allow Public Read for anyone (Shree and visitors)
 CREATE POLICY "Public Read Access for Scrapbook Images"
 ON storage.objects FOR SELECT
-USING (bucket_id = 'birthday-scrapbook');
+USING (bucket_id = 'birthday-photos');
 
 -- Storage Policy: Allow Admin Upload (service role or authenticated admin)
 CREATE POLICY "Admin Upload Access for Scrapbook Images"
 ON storage.objects FOR INSERT
-WITH CHECK (bucket_id = 'birthday-scrapbook');
+WITH CHECK (bucket_id = 'birthday-photos');
 
 -- Storage Policy: Allow Admin Delete
 CREATE POLICY "Admin Delete Access for Scrapbook Images"
 ON storage.objects FOR DELETE
-USING (bucket_id = 'birthday-scrapbook');
+USING (bucket_id = 'birthday-photos');
 
 -- Storage Policy: Allow Admin Update
 CREATE POLICY "Admin Update Access for Scrapbook Images"
 ON storage.objects FOR UPDATE
-USING (bucket_id = 'birthday-scrapbook');
+USING (bucket_id = 'birthday-photos');
 
 
 -- 2. Create Photographs Table
@@ -124,3 +124,4 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can view public settings" ON public.site_settings FOR SELECT USING (true);
 CREATE POLICY "Admin can manage settings" ON public.site_settings FOR ALL USING (true);
+

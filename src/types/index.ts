@@ -6,6 +6,7 @@ export interface Photo {
   date?: string;
   category?: string;
   featured?: boolean;
+  isPublished?: boolean;
   orderIndex?: number;
   createdAt?: string;
 }
@@ -87,3 +88,4 @@ export interface PreviewAuthResponse {
   remainingAttempts?: number;
   cooldownSeconds?: number;
 }
+

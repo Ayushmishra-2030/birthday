@@ -208,12 +208,13 @@ export default function CatchHeartsGame() {
     loop();
   };
 
-  // Track mouse / touch over canvas
+  // Track mouse / touch over canvas with proper coordinate scaling
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas || !isPlaying) return;
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
+    const scale = canvas.width / rect.width;
+    const x = (e.clientX - rect.left) * scale;
     const targetX = Math.max(0, Math.min(canvas.width - gameStateRef.current.basketWidth, x - gameStateRef.current.basketWidth / 2));
     gameStateRef.current.basketX = targetX;
   };
@@ -270,6 +271,7 @@ export default function CatchHeartsGame() {
           ref={canvasRef}
           width={560}
           height={380}
+          onPointerDown={handlePointerMove}
           onPointerMove={handlePointerMove}
           className="w-full h-full cursor-grab active:cursor-grabbing touch-none"
         />
@@ -324,3 +326,4 @@ export default function CatchHeartsGame() {
     </div>
   );
 }
+

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Sparkles, Key, Lock, AlertCircle, X, CheckCircle2 } from 'lucide-react';
 import { sound } from '@/lib/sound';
 
@@ -11,6 +12,7 @@ interface SecretAccessModalProps {
 }
 
 export default function SecretAccessModal({ isOpen, onClose, onSuccess }: SecretAccessModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +21,31 @@ export default function SecretAccessModal({ isOpen, onClose, onSuccess }: Secret
   const [remainingAttempts, setRemainingAttempts] = useState<number | null>(null);
   const [cooldownSeconds, setCooldownSeconds] = useState<number | null>(null);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
+
+  // Escape key handler
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen || !mounted) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,10 +85,16 @@ export default function SecretAccessModal({ isOpen, onClose, onSuccess }: Secret
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+  const modal = (
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn"
+      role="dialog"
+      aria-modal="true"
+    >
       <div
-        className={`relative w-full max-w-md p-7 rounded-2xl bg-gradient-to-b from-[#1c122c] to-[#0c0816] border border-purple-500/40 shadow-[0_0_50px_rgba(168,85,247,0.3)] text-white transition-transform ${
+        onClick={(e) => e.stopPropagation()}
+        className={`relative w-full max-w-md p-6 sm:p-7 rounded-2xl bg-gradient-to-b from-[#1c122c] to-[#0c0816] border border-purple-500/40 shadow-[0_0_50px_rgba(168,85,247,0.3)] text-white transition-transform ${
           isShaking ? 'animate-[shake_0.5s_ease-in-out]' : ''
         }`}
       >
@@ -72,7 +104,9 @@ export default function SecretAccessModal({ isOpen, onClose, onSuccess }: Secret
 
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+          className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white rounded-xl hover:bg-white/10 transition-colors cursor-pointer min-w-[40px] min-h-[40px] flex items-center justify-center"
+          title="Close (Esc)"
+          aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
@@ -81,7 +115,7 @@ export default function SecretAccessModal({ isOpen, onClose, onSuccess }: Secret
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-rose-600 text-white shadow-lg mb-3 shadow-purple-500/30">
             <Key className="w-7 h-7" />
           </div>
-          <h3 className="text-2xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-purple-200 to-amber-200">
+          <h3 className="text-xl sm:text-2xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-purple-200 to-amber-200">
             The Secret Realm of Ayush
           </h3>
           <p className="text-xs text-purple-200/70 mt-1 font-sans">
@@ -155,4 +189,6 @@ export default function SecretAccessModal({ isOpen, onClose, onSuccess }: Secret
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }
