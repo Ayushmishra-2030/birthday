@@ -128,6 +128,19 @@ class SoundEffects {
     } catch (e) {}
   }
 
+  // Cake cutting sound (soft slice + fairy chime)
+  public playCakeCut() {
+    if (this.isMuted) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    try {
+      this.playChime(783.99, 0.4);
+      setTimeout(() => this.playChime(1046.5, 0.8), 120);
+      setTimeout(() => this.playChime(1318.5, 1.2), 240);
+    } catch (e) {}
+  }
+
   // Grand celebration / final reveal fanfare
   public playGrandCelebration() {
     if (this.isMuted) return;

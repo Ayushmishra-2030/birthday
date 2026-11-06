@@ -4,12 +4,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { Gift, Sparkles, Mic, MicOff, Heart, Flame, ArrowDown, Star } from 'lucide-react';
 import { sound } from '@/lib/sound';
+import BirthdayCake from './BirthdayCake';
 
 interface GrandBirthdayRevealProps {
   onEnterWorld: () => void;
+  showAge20?: boolean;
 }
 
-export default function GrandBirthdayReveal({ onEnterWorld }: GrandBirthdayRevealProps) {
+export default function GrandBirthdayReveal({ onEnterWorld, showAge20 = false }: GrandBirthdayRevealProps) {
   // Reveal stages:
   // 1: Dark intro with expanding glowing heart
   // 2: Magic particles & gift box presentation
@@ -220,84 +222,44 @@ export default function GrandBirthdayReveal({ onEnterWorld }: GrandBirthdayRevea
             </p>
           </div>
 
-          {/* Interactive Birthday Cake */}
-          <div className="relative my-4 flex flex-col items-center w-full max-w-[320px] sm:max-w-[380px] mx-auto">
-            {/* Candle Flames */}
-            <div className="flex items-center gap-5 sm:gap-6 mb-1 z-10">
-              {[1, 2, 3].map((candleIndex) => (
-                <div key={candleIndex} className="flex flex-col items-center">
-                  {!isCandleBlown ? (
-                    <div className="relative">
-                      <div className="w-3.5 sm:w-4 h-5 sm:h-6 bg-gradient-to-t from-orange-500 via-amber-400 to-yellow-100 rounded-full animate-bounce drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]" />
-                      <Flame className="w-4 sm:w-5 h-6 sm:h-7 text-amber-300 absolute -top-1 -left-0.5 animate-pulse" />
-                    </div>
-                  ) : (
-                    <div className="w-3 h-4 bg-gray-500/40 rounded-full animate-pulse">
-                      <span className="text-[10px] text-gray-400">💨</span>
-                    </div>
-                  )}
-                  {/* Candle Wick & Body */}
-                  <div className="w-1.5 h-5 sm:h-6 bg-gradient-to-b from-rose-300 to-purple-400 rounded-sm shadow-sm" />
-                </div>
-              ))}
-            </div>
+          {/* Interactive Handcrafted Birthday Cake */}
+          <div className="relative my-2 sm:my-4 flex flex-col items-center w-full">
+            <BirthdayCake
+              isCandleBlown={isCandleBlown}
+              onBlowCandle={handleBlowCandle}
+              showAge20={showAge20}
+            />
 
-            {/* Cake Tiers */}
-            <div className="relative w-full flex flex-col items-center">
-              {/* Top Tier */}
-              <div className="w-32 sm:w-44 md:w-48 h-10 sm:h-12 md:h-14 rounded-t-2xl bg-gradient-to-r from-rose-500 via-pink-400 to-rose-600 border border-rose-300/40 shadow-inner flex items-center justify-center text-xs md:text-sm font-serif font-bold text-white tracking-widest">
-                SHREE
-              </div>
-              {/* Frosting drips */}
-              <div className="w-32 sm:w-44 md:w-48 h-1.5 sm:h-2 bg-white/70 rounded-full mx-auto" />
-              {/* Bottom Tier */}
-              <div className="w-44 sm:w-60 md:w-64 h-14 sm:h-18 md:h-20 rounded-b-2xl bg-gradient-to-r from-purple-800 via-rose-800 to-purple-900 border-x border-b border-purple-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] flex items-center justify-center text-[11px] sm:text-xs md:text-sm font-sans text-rose-200 px-2 text-center">
-                ✨ Princess of Ayush&apos;s Heart ✨
-              </div>
-              {/* Cake Stand */}
-              <div className="w-52 sm:w-68 md:w-72 h-3 bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 rounded-full mx-auto mt-0.5 shadow-md" />
-            </div>
-          </div>
-
-          {/* Candle Blow Controls */}
-          {!isCandleBlown ? (
-            <div className="space-y-3">
-              <p className="text-sm md:text-base text-rose-200/90 font-medium">
-                Make a wish, Princess! Blow out your candles 🎂✨
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <button
-                  onClick={handleBlowCandle}
-                  className="px-6 py-3 rounded-full bg-gradient-to-r from-rose-600 to-purple-600 hover:from-rose-500 hover:to-purple-500 font-semibold text-sm text-white shadow-lg shadow-rose-900/50 flex items-center gap-2 hover:scale-105 transition-all cursor-pointer"
-                >
-                  <Flame className="w-4 h-4 text-amber-300" />
-                  <span>Blow Candles (Tap Here)</span>
-                </button>
-
+            {!isCandleBlown && (
+              <div className="mt-3 flex items-center justify-center">
                 <button
                   onClick={toggleMicrophone}
-                  className={`px-5 py-3 rounded-full border text-xs md:text-sm font-medium flex items-center gap-2 transition-all ${
+                  className={`px-4 py-2 rounded-full border text-xs font-medium flex items-center gap-2 transition-all cursor-pointer ${
                     isListeningMic
                       ? 'bg-emerald-950/80 border-emerald-400 text-emerald-300 animate-pulse'
-                      : 'bg-purple-950/40 border-purple-500/40 text-purple-200 hover:bg-purple-900/60'
+                      : 'bg-purple-950/50 border-purple-400/30 text-purple-200 hover:bg-purple-900/60'
                   }`}
+                  title="Toggle Microphone to blow candles with real breath"
                 >
                   {isListeningMic ? (
                     <>
-                      <Mic className="w-4 h-4 text-emerald-400" />
-                      <span>Blow into mic now! ({Math.round(micVolume)}%)</span>
+                      <Mic className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Listening... blow into mic ({Math.round(micVolume)}%)</span>
                     </>
                   ) : (
                     <>
-                      <MicOff className="w-4 h-4" />
-                      <span>Use Mic to Blow</span>
+                      <MicOff className="w-3.5 h-3.5 text-purple-300" />
+                      <span>Or Blow into Microphone 🎙️</span>
                     </>
                   )}
                 </button>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-5 animate-fadeIn">
+            )}
+          </div>
+
+          {/* Shown when candle is blown */}
+          {isCandleBlown && (
+            <div className="space-y-5 animate-fadeIn mt-4">
               <div className="p-4 rounded-2xl bg-gradient-to-r from-rose-950/60 to-purple-950/60 border border-rose-500/40 max-w-md mx-auto">
                 <p className="text-base md:text-lg text-amber-200 font-serif font-bold">
                   Wish Made! May every dream of yours come true ❤️

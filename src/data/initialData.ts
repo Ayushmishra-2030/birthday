@@ -11,6 +11,7 @@ export const initialSiteSettings: SiteSettings = {
   musicAutoPlayPrompt: true,
   bgMusicTitle: 'Enchanted Midnight Romance',
   bgMusicUrl: '/audio/romantic-ambiance.mp3',
+  showAge20: false,
 };
 
 export const initialLetters: Letter[] = [

@@ -138,7 +138,10 @@ export default function Home() {
 
       {/* Grand Birthday Opening Sequence */}
       {!enteredWorld ? (
-        <GrandBirthdayReveal onEnterWorld={handleEnterWorld} />
+        <GrandBirthdayReveal
+          onEnterWorld={handleEnterWorld}
+          showAge20={content?.settings?.showAge20}
+        />
       ) : (
         /* The Full Fairytale Universe */
         <div className="relative z-20 animate-fadeIn">

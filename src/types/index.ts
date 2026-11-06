@@ -79,6 +79,7 @@ export interface SiteSettings {
   musicAutoPlayPrompt: boolean;
   bgMusicTitle: string;
   bgMusicUrl: string;
+  showAge20?: boolean;
 }
 
 export interface PreviewAuthResponse {

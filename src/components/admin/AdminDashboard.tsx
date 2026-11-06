@@ -979,6 +979,23 @@ export default function AdminDashboard({
                 </div>
 
                 <div className="pt-4 border-t border-purple-500/20">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={settings.showAge20 || false}
+                      onChange={(e) => setSettings({ ...settings, showAge20: e.target.checked })}
+                      className="w-5 h-5 accent-rose-500 rounded cursor-pointer"
+                    />
+                    <span className="text-xs text-white font-medium">
+                      Display Age &quot;20&quot; Candle Topper on Birthday Cake
+                    </span>
+                  </label>
+                  <p className="text-[11px] text-purple-400 mt-1">
+                    When unchecked (recommended default), the cake displays regal decorative royal tapered candles without an age. When checked, the gilded numeral &quot;20&quot; crown topper appears.
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-purple-500/20">
                   <label className="block text-xs text-purple-300 mb-1">
                     Target Birthday ISO Timestamp (Asia/Kolkata)
                   </label>
