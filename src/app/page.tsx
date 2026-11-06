@@ -15,7 +15,7 @@ import ReasonsILoveYou from '@/components/reasons/ReasonsILoveYou';
 import SpecialBirthdayMessage from '@/components/special-message/SpecialBirthdayMessage';
 import FinalSurprise from '@/components/final-surprise/FinalSurprise';
 import MusicPlayer from '@/components/audio/MusicPlayer';
-import { Heart, Sparkles, Shield, RotateCcw, Menu, X, ArrowUp } from 'lucide-react';
+import { Heart, Sparkles, Shield, RotateCcw, Menu, X, ArrowUp, Lock, Eye } from 'lucide-react';
 import { sound } from '@/lib/sound';
 
 export default function Home() {
@@ -23,6 +23,7 @@ export default function Home() {
   const [content, setContent] = useState<any>(null);
   const [enteredWorld, setEnteredWorld] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [forceCountdownView, setForceCountdownView] = useState(false);
 
   const fetchContent = async () => {
     try {
@@ -60,6 +61,15 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleExitPreview = async () => {
+    try {
+      await fetch('/api/preview/exit', { method: 'POST' });
+      setContent({ ...content, isUnlocked: false, isPreview: false, isAdmin: false });
+      setForceCountdownView(false);
+      sound.playChime(440, 0.4);
+    } catch {}
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#07040b] flex flex-col items-center justify-center text-white space-y-4">
@@ -74,8 +84,8 @@ export default function Home() {
     );
   }
 
-  // Before 7 November and without preview code -> Show Countdown World only
-  if (!content?.isUnlocked) {
+  // Before 7 November and without preview code (or when previewing countdown) -> Show Countdown World
+  if (!content?.isUnlocked || forceCountdownView) {
     return (
       <main className="relative min-h-screen bg-[#07040c] text-white selection:bg-rose-500">
         <Starfield />
@@ -84,6 +94,8 @@ export default function Home() {
         <CountdownWorld
           targetIso={content?.targetIso || '2026-11-07T00:00:00+05:30'}
           onUnlocked={handleUnlocked}
+          isPreviewMode={Boolean(content?.isUnlocked && forceCountdownView)}
+          onReturnToWorld={() => setForceCountdownView(false)}
         />
         <MusicPlayer />
       </main>
